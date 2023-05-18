@@ -1,5 +1,22 @@
-public class Main {
+import processing.core.PApplet;
+public class Main extends PApplet{
+    public static PApplet app;
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+
+    }
+    public Main() {
+        super();
+        app = this;
+    }
+    public void settings() {
+        size(1000, 500);
+    }
+
+    public void setup() {
+
+    }
+
+    public void draw() {
+
     }
 }
