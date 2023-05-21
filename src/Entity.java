@@ -1,47 +1,77 @@
+//array of cells & array of entities, each entity has a row & col, each cell has a boolean
+//move: update row and column, then have a display method
+    //display—
+
 //some import of PImage to display an image
 public class Entity {
 //    private int x;
 //    private int y;
 //    private int row; //is both an x and a row necessary?
 //    private int col; //is both a y and a col necessary?
+    public static int count;
     private int maxHP;
     private int currentHP;
-    private boolean alive;
     private int attack; //damage dealt to other entities
 
-    private Cell c;
+    private int row;
+    private int col;
 
-    public Entity() {}
+    public Entity() {
+        count++;
+    }
 
-    public Entity(Cell c, int maxHP, int currentHP, boolean alive, int attack) {
-//        this.x = x;
-//        this.y = y;
-//        this.row = row;
-//        this.col = col;
-        this.c = c;
+    public Entity(int row, int col, int maxHP, int currentHP, int attack) {
+        count++;
+        this.row = row;
+        this.col = col;
         this.maxHP = maxHP;
-        this.currentHP = currentHP;
-        this.alive = alive; //Is it necessary to make alive its own boolean, rather than defining it
-                            //according to whether currentHP > 0?
+        this.currentHP = currentHP; //maybe get rid of this if everyting starts at full HP
         this.attack = attack;
     }
 
-//    public void setX(int x) {
-//        this.x = x;
-//    }
-//    public void setY(int y) {
-//        this.y = y;
-//    }
-//    public void setRow(int row) {
-//        this.row = row;
-//    }
-//    public void setCol(int col) {
-//        this.col = col;
-//    }
+    public void move(int direction) {
+        //calculate target row & col based on direction & move rules
+        //if target location in entities is empty,
+            //entities[target row][target col] = this;
+            //entities[this.row][this.col] = null;
+            //setRow(target row);
+            //setCol(target col);
+        //else
+            //do a lil animation?
+
+        //It would be ambitious to try and define different "stride lengths" or anything like that.
+        //But not a bad idea to leave code flexible enough to implement that, if so desired...
+        //new private instance int moveLength?
+    }
+    public void attack(Entity[][] entities) {
+        //do a lil animation (sword swing, e.g.)
+        for (int r = -1; r <= 1; r++) {
+            for (int c = -1; c <= 1; c++) {
+                Entity target = entities[r+this.getRow()][c+this.getCol()];
+                //this should be ok b/c of object aliasing—just pointing to the Entity in entities, not a new Entity?
+                if (target != null) {
+                    //do a lil animation (stagger, e.g.)
+                    target.setCurrentHP(target.getCurrentHP()-this.getAttack());
+                }
+            }
+        }
+        /*
+        Maybe consider attack pattern as well; are all attacks straight in front? a radius around? does it
+        vary based on the class, or on the object?
+            Definitely a later feature rather than a now thing, though.
+         */
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+    public void setCol(int col) {
+        this.col = col;
+    }
 
     public String toString() {
         // IMPLEMENT
-        return "";
+        return "entity" + count;
     }
     public void setMaxHP(int maxHP) {
         System.out.println("Max HP set from " + this.maxHP + " to " + maxHP);
@@ -53,70 +83,24 @@ public class Entity {
         this.currentHP = currentHP;
 
     }
-    public void setAlive(boolean alive) {
-        this.alive = alive;
-    }
 
     public void setAttack(int attack) {
         this.attack = attack;
     }
-    public void setC(Cell c) {
-        System.out.println(this + " moved to " + c);
-        this.c = c;
-    }
 
-//    public int getX() {
-//        return x;
-//    }
-//    public int getY() {
-//        return y;
-//    }
-//    public int getRow() {
-//        return row;
-//    }
-//    public int getCol() {
-//        return col;
-//    }
+    public int getRow() {
+        return row;
+    }
+    public int getCol() {
+        return col;
+    }
     public int getMaxHP() {
         return maxHP;
     }
     public int getCurrentHP() {
         return currentHP;
     }
-    public boolean getAlive() {
-        return alive;
-    }
     public int getAttack() {
         return attack;
-    }
-    public Cell getC() {
-        return c;
-    }
-    public void move(int direction) {
-        //i think define this behavior in Main, and in Entity just make it so that Entity
-        // objects move in Direction.
-        //It would be ambitious to try and define different "stride lengths" or anything like that.
-        //But not a bad idea to leave code flexible enough to implement that, if so desired...
-        //new private instance int moveLength?
-    }
-    public void attack(Cell[][] cells) {
-        for (int r = -1; r <= 1; r++) {
-            for (int c = -1; c <= 1; c++) {
-                Cell cell = cells[getC().getRow()+r][getC().getColumn()+c];
-                if (cell.hasEntity()) {
-                    cell.getEntity().setCurrentHP(cell.getEntity().getCurrentHP()-getAttack());
-                    //oops this doesn't work anymore
-                }
-            }
-        }
-        /*
-        oooohh this is going to be tricky. some kind of scan of surrounding cells
-        & whether they "haveEntity"? and for each cell that hasEntity, remove a
-        certain amount of currentHP according to "this"'s attack value?
-
-        Maybe consider attack pattern as well; are all attacks straight in front? a radius around? does it
-        vary based on the class, or on the object?
-            Definitely a later feature rather than a now thing, though.
-         */
     }
 }
