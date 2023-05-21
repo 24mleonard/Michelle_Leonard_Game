@@ -1,12 +1,5 @@
 import processing.core.PApplet;
 
-//QUESTIONS
-/*
-Is there a better way to write constructors for classes with a bajillion variables? I hate typing them
-    out every time.
-in Entity: does my attack() idea work? dependent on object collision mechanism first.
- */
-
 //TO DO
 /*
 when player entity dies, display a game over screen (only if all players are dead—more than one?)
@@ -20,10 +13,17 @@ Move patterns? (Stride length?)
 Attack patterns? (Weapons?)
  */
 
-//CREDITS
-//The construction of a grid of cells was based on my Game of Life project.
-//Caitlyn gave some advice with interactions between Entity objects and moral support.
+//QUESTIONS
+/*
+Is there a better way to write constructors for classes with a bajillion variables? I hate typing them
+    out every time.
+ */
 
+//CREDITS
+/*
+The construction of a grid of cells was based on my Game of Life project.
+Caitlyn gave some advice with interactions between Entity objects and moral support.
+*/
 public class Main extends PApplet{
     public static PApplet app;
     public final int NUM_ROWS = 15;
@@ -52,8 +52,10 @@ public class Main extends PApplet{
 
     public void draw() {
         removeDeadEntities();
+        displayEntities();
         //^ let this update constantly
         //let rest of draw update ONLY when player presses a button (arrow key, attack, wait)
+
     }
 
     public void keyPressed() {
@@ -73,6 +75,16 @@ public class Main extends PApplet{
                 if (entities[row][col] != null && entities[row][col].getCurrentHP() < 0) { //
                     //do a little animation!
                     entities[row][col] = null;
+                }
+            }
+        }
+    }
+
+    private void displayEntities() {
+        for (Entity[] es : entities) {
+            for (Entity e: es) {
+                if (e != null) {
+                    e.display();
                 }
             }
         }

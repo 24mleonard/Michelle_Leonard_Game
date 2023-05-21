@@ -1,18 +1,8 @@
-//array of cells & array of entities, each entity has a row & col, each cell has a boolean
-//move: update row and column, then have a display method
-    //display—
-
-//some import of PImage to display an image
 public class Entity {
-//    private int x;
-//    private int y;
-//    private int row; //is both an x and a row necessary?
-//    private int col; //is both a y and a col necessary?
-    public static int count;
+    public static int count; //this is kind of dumb but i'm keeping it for convenience for now
     private int maxHP;
     private int currentHP;
     private int attack; //damage dealt to other entities
-
     private int row;
     private int col;
 
@@ -47,44 +37,45 @@ public class Entity {
         //do a lil animation (sword swing, e.g.)
         for (int r = -1; r <= 1; r++) {
             for (int c = -1; c <= 1; c++) {
-                Entity target = entities[r+this.getRow()][c+this.getCol()];
-                //this should be ok b/c of object aliasing—just pointing to the Entity in entities, not a new Entity?
+                Entity target = entities[r+this.getRow()][c+this.getCol()]; //this should be ok b/c of object aliasing—just pointing to the Entity in entities, not a new Entity?
                 if (target != null) {
                     //do a lil animation (stagger, e.g.)
                     target.setCurrentHP(target.getCurrentHP()-this.getAttack());
                 }
             }
         }
-        /*
-        Maybe consider attack pattern as well; are all attacks straight in front? a radius around? does it
-        vary based on the class, or on the object?
-            Definitely a later feature rather than a now thing, though.
-         */
+        //Consider attack patterns? Maybe consider attack pattern as well; are all attacks straight in front? a radius around? does it
     }
 
-    public void setRow(int row) {
-        this.row = row;
-    }
-    public void setCol(int col) {
-        this.col = col;
+    public void display() {
+        //some PImage stuff
     }
 
     public String toString() {
-        // IMPLEMENT
-        return "entity" + count;
+        return "entity " + count + ": I think I am at row " + row + " and col " + col;
+    }
+
+    public void setRow(int row) {
+        System.out.println("row changed from " + this.row + " to " + row);
+        this.row = row;
+    }
+    public void setCol(int col) {
+        System.out.println("col changed from " + this.col + " to " + col);
+        this.col = col;
     }
     public void setMaxHP(int maxHP) {
-        System.out.println("Max HP set from " + this.maxHP + " to " + maxHP);
+        System.out.println("maxHP changed from " + this.maxHP + " to " + maxHP);
         this.maxHP = maxHP;
     }
 
     public void setCurrentHP(int currentHP) {
-        System.out.println("HP set from " + this.currentHP + " to " + currentHP);
+        System.out.println("currentHP changed from " + this.currentHP + " to " + currentHP);
         this.currentHP = currentHP;
 
     }
 
     public void setAttack(int attack) {
+        System.out.println("attack changed from " + this.attack + " to " + attack);
         this.attack = attack;
     }
 
