@@ -34,7 +34,6 @@ public class Main extends PApplet{
     public static PApplet app;
     public final static int NUM_ROWS = 10; //hopefully this being static is OK
     public final static int NUM_COLS = 20;
-
     public final static int CELL_SIZE = 50;
 
     public static Entity[][] entities; //this array is going to be mostly EMPTY i think
@@ -56,7 +55,7 @@ public class Main extends PApplet{
 
     public void setup() {
         background(169);
-        playerImage = loadImage("mika.jpg");
+        playerImage = loadImage("mika.jpeg");
         enemyImage = loadImage("anya.jpeg");
         playerImage.resize(CELL_SIZE, CELL_SIZE);
         enemyImage.resize(CELL_SIZE, CELL_SIZE); //Is there a way to make this more efficient so resize() occurs automatically? Overloading?

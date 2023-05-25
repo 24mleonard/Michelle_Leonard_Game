@@ -43,8 +43,8 @@ public class Entity {
             targetCol += stride;
         }
         //move this to target location
-        if (targetRow < -1 || targetRow > Main.entities.length
-                || targetCol < -1 || targetCol > Main.entities[0].length) {
+        if (targetRow < 0 || targetRow > Main.NUM_ROWS - 1
+                || targetCol < 0 || targetCol > Main.NUM_COLS - 1) {
             //animation?
             System.out.println(this + " failed to move to " + targetRow + ", " + targetCol + " because it is out of bounds");
         } else if (Main.entities[targetRow][targetCol] != null) {
