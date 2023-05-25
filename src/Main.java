@@ -7,6 +7,7 @@ when player entity dies, display a game over screen (only if all players are dea
         how tf would i handle the controls on that...no i don't think so
          THEY ALL MOVE SIMULTANEOUSLY LIKE IN BABA IS YOU (this is dumb)
 frameRate(0) and keyPressed calls draw()?
+    //i don't think this is necessary it's working already
 
 FUN FEATURES (not core)
 Create a "level editor"? (easy way to make levels, basically)
@@ -36,11 +37,15 @@ public class Main extends PApplet{
     public final static int NUM_COLS = 20;
     public final static int CELL_SIZE = 50;
 
+    public boolean friendlyFire = true; //can players deal damage to other players?
+
     public static Entity[][] entities; //this array is going to be mostly EMPTY i think
     //lololo hopefully static is OK
     public PImage playerImage;
     public PImage enemyImage;
+
     Entity player;
+
 
     public static void main(String[] args) {
         PApplet.main("Main");
@@ -62,9 +67,8 @@ public class Main extends PApplet{
 
         entities = new Entity[NUM_ROWS][NUM_COLS];
         displayGrid();
-        player = new Entity(NUM_ROWS/2, NUM_COLS/2, 3, 3, 1, playerImage, true);
-        entities[NUM_ROWS/2][NUM_COLS/2] = player;
-        entities[NUM_ROWS/2 + 1][NUM_COLS/2] = new Entity(NUM_ROWS/2 + 1, NUM_COLS/2, 3, 3, 1, enemyImage, false);
+        entities[NUM_ROWS/2][NUM_COLS/2] = new Entity(NUM_ROWS/2, NUM_COLS/2, 3, 3, 1, playerImage, true);
+        entities[NUM_ROWS/2 + 1][NUM_COLS/2] = new Entity(NUM_ROWS/2 + 1, NUM_COLS/2, 3, 3, 1, enemyImage, true);
     }
 
     public void draw() {
@@ -89,16 +93,16 @@ public class Main extends PApplet{
 //        }
         for (Entity[] es : entities) {
             for (Entity e : es) {
-                if (player != null && player.isPlayer()) {
+                if (e != null && e.isPlayer()) {
                     System.out.println(key + " entered");
                     if (keyCode == UP || key == 'w') {
-                        player.setWillMove(1);
+                        e.setWillMove(1);
                     } else if (keyCode == LEFT || key == 'a') {
-                        player.setWillMove(2);
+                        e.setWillMove(2);
                     } else if (keyCode == DOWN || key == 's') {
-                        player.setWillMove(3);
+                        e.setWillMove(3);
                     } else if (keyCode == RIGHT || key == 'd') {
-                        player.setWillMove(4);
+                        e.setWillMove(4);
                     }
                 }
             }
