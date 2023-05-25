@@ -7,6 +7,9 @@ public class Entity {
     private int attack; //damage dealt to other entities
     private int row;
     private int col;
+    private int stride;
+
+    private boolean isPlayer; //determines whether target moves autonomously or according to user input
 
     private PImage image;
 
@@ -14,7 +17,7 @@ public class Entity {
         count++;
     }
 
-    public Entity(int row, int col, int maxHP, int currentHP, int attack, PImage image) {
+    public Entity(int row, int col, int maxHP, int currentHP, int attack, PImage image, boolean isPlayer) {
         count++;
         this.row = row;
         this.col = col;
@@ -22,21 +25,38 @@ public class Entity {
         this.currentHP = currentHP; //maybe get rid of this if everyting starts at full HP
         this.attack = attack;
         this.image = image;
+        this.isPlayer = isPlayer;
+        stride = 1;
     }
 
-    public void move(int direction) {
-        //calculate target row & col based on direction & move rules
-        //if target location in entities is empty,
-            //entities[target row][target col] = this;
-            //entities[this.row][this.col] = null;
-            //setRow(target row);
-            //setCol(target col);
-        //else
-            //do a lil animation?
-
-        //It would be ambitious to try and define different "stride lengths" or anything like that.
-        //But not a bad idea to leave code flexible enough to implement that, if so desired...
-        //new private instance int moveLength?
+    public void move(int direction) { //W 1, A 2, S 3, D 4
+        //calculate target location based on direction & move rules
+        int targetRow = this.getRow();
+        int targetCol = this.getCol();
+        if (direction == 1) { //up
+            targetRow -= stride;
+        } else if (direction == 2) { //left
+            targetCol -= stride;
+        } else if (direction == 3) { //down
+            targetRow += stride;
+        } else if (direction == 4) { //right
+            targetCol += stride;
+        }
+        //move this to target location
+        if (targetRow < -1 || targetRow > Main.entities.length
+                || targetCol < -1 || targetCol > Main.entities[0].length) {
+            //animation?
+            System.out.println(this + " failed to move to " + targetRow + ", " + targetCol + " because it is out of bounds");
+        } else if (Main.entities[targetRow][targetCol] != null) {
+            //animation?
+            System.out.println(this + " failed to move to " + targetRow + ", " + targetCol + " because there is already an entity there");
+        } else {
+           Main.entities[targetRow][targetCol] = this;
+            Main.entities[this.getRow()][this.getCol()] = null;
+            this.setRow(targetRow);
+            this.setCol(targetCol);
+            System.out.println(this + " moved to " + targetRow + ", " + targetCol);
+        }
     }
     public void attack(Entity[][] entities) {
         //do a lil animation (sword swing, e.g.)
@@ -54,11 +74,11 @@ public class Entity {
 
     public void display() {
         //some PImage stuff
-        Main.app.image(image, row*Main.CELL_SIZE, col*Main.CELL_SIZE);
+        Main.app.image(image, col*Main.CELL_SIZE, row*Main.CELL_SIZE);
     }
 
     public String toString() {
-        return "entity " + count + ": I think I am at row " + row + " and col " + col;
+        return "entity " + count;
     }
 
     public void setRow(int row) {
@@ -85,6 +105,11 @@ public class Entity {
         this.attack = attack;
     }
 
+    public void setIsPlayer(boolean isPlayer) { //I don't know why this would ever be used.
+        System.out.println(this + "is player: " + isPlayer);
+        this.isPlayer = isPlayer;
+    }
+
     public int getRow() {
         return row;
     }
@@ -100,4 +125,5 @@ public class Entity {
     public int getAttack() {
         return attack;
     }
+    public boolean isPlayer() {return isPlayer;}
 }
