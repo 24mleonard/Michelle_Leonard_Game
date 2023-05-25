@@ -1,4 +1,5 @@
 import processing.core.PApplet;
+import processing.core.PImage;
 
 //TO DO
 /*
@@ -11,6 +12,7 @@ FUN FEATURES (not core)
 Create a "level editor"? (easy way to make levels, basically)
 Move patterns? (Stride length?)
 Attack patterns? (Weapons?)
+Images: optimize resizing to a square? (Crop, don't just stretch? get()?)
  */
 
 //QUESTIONS
@@ -22,16 +24,18 @@ Is there a better way to write constructors for classes with a bajillion variabl
 //CREDITS
 /*
 The construction of a grid of cells was based on my Game of Life project.
-Caitlyn gave some advice with interactions between Entity objects and moral support.
+Caitlyn Flexer gave some advice with interactions between Entity objects and moral support.
 */
 public class Main extends PApplet{
     public static PApplet app;
-    public final int NUM_ROWS = 15;
-    public final int NUM_COLS = 20;
+    public final static int NUM_ROWS = 15; //hopefully this being static is OK
+    public final static int NUM_COLS = 20;
 
-    public final int CELL_SIZE = 50;
+    public final static int CELL_SIZE = 50;
 
     public Entity[][] entities; //this array is going to be mostly EMPTY i think
+    public PImage playerImage;
+    public PImage enemyImage;
 
     public static void main(String[] args) {
         PApplet.main("Main");
@@ -46,8 +50,12 @@ public class Main extends PApplet{
 
     public void setup() {
         background(169);
+        playerImage = loadImage("mika.jpg");
+        playerImage.resize(CELL_SIZE, CELL_SIZE);
         entities = new Entity[NUM_ROWS][NUM_COLS];
         displayGrid();
+        Entity player = new Entity(NUM_ROWS/2, NUM_COLS/2, 3, 3, 1, playerImage);
+        player.display();
     }
 
     public void draw() {
@@ -72,7 +80,7 @@ public class Main extends PApplet{
     private void removeDeadEntities() {
         for (int row = 0; row < entities.length; row++) {
             for (int col = 0; col < entities[row].length; col++) {
-                if (entities[row][col] != null && entities[row][col].getCurrentHP() < 0) { //
+                if (entities[row][col] != null && entities[row][col].getCurrentHP() < 0) {
                     //do a little animation!
                     entities[row][col] = null;
                 }

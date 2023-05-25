@@ -1,3 +1,5 @@
+import processing.core.PImage;
+
 public class Entity {
     public static int count; //this is kind of dumb but i'm keeping it for convenience for now
     private int maxHP;
@@ -6,17 +8,20 @@ public class Entity {
     private int row;
     private int col;
 
+    private PImage image;
+
     public Entity() {
         count++;
     }
 
-    public Entity(int row, int col, int maxHP, int currentHP, int attack) {
+    public Entity(int row, int col, int maxHP, int currentHP, int attack, PImage image) {
         count++;
         this.row = row;
         this.col = col;
         this.maxHP = maxHP;
         this.currentHP = currentHP; //maybe get rid of this if everyting starts at full HP
         this.attack = attack;
+        this.image = image;
     }
 
     public void move(int direction) {
@@ -49,6 +54,7 @@ public class Entity {
 
     public void display() {
         //some PImage stuff
+        Main.app.image(image, row*Main.CELL_SIZE, col*Main.CELL_SIZE);
     }
 
     public String toString() {
