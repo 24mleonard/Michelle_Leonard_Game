@@ -3,7 +3,6 @@ import processing.core.PImage;
 
 //TO DO
 /*
-make entities show up when they are not being controlled by player (where did anya go, e.g. ...)
 when player entity dies, display a game over screen (only if all players are dead—more than one?)
         how tf would i handle the controls on that...no i don't think so
          THEY ALL MOVE SIMULTANEOUSLY LIKE IN BABA IS YOU (this is dumb)
@@ -17,6 +16,7 @@ Images: optimize resizing to a square? (Crop, don't just stretch? get()?)
 
 //QUESTIONS
 /*
+How to handle collisions where both entities want to move to the same spot at the same time? Precedence?
 For now I can only have one player at a time (I am having difficulties getting keyPressed to apply to all isPlayer Entity objects in entities.
     Hopefully i can make that not the case later?
 Is there a better way to write constructors for classes with a bajillion variables? I hate typing them
@@ -59,12 +59,12 @@ public class Main extends PApplet{
         enemyImage = loadImage("anya.jpeg");
         playerImage.resize(CELL_SIZE, CELL_SIZE);
         enemyImage.resize(CELL_SIZE, CELL_SIZE); //Is there a way to make this more efficient so resize() occurs automatically? Overloading?
+
         entities = new Entity[NUM_ROWS][NUM_COLS];
         displayGrid();
         player = new Entity(NUM_ROWS/2, NUM_COLS/2, 3, 3, 1, playerImage, true);
-        player.display();
-        Entity enemy = new Entity(NUM_ROWS/2 + 1, NUM_COLS/2, 3, 3, 1, enemyImage, false);
-        enemy.display();
+        entities[NUM_ROWS/2][NUM_COLS/2] = player;
+        entities[NUM_ROWS/2 + 1][NUM_COLS/2] = new Entity(NUM_ROWS/2 + 1, NUM_COLS/2, 3, 3, 1, enemyImage, false);
     }
 
     public void draw() {
@@ -78,31 +78,39 @@ public class Main extends PApplet{
 
     public void keyPressed() {
         //draw(); //would this work?
-        if (keyCode == UP || key == 'w') {
-            player.move(1);
-        } else if (keyCode == LEFT || key == 'a') {
-            player.move(2);
-        } else if (keyCode == DOWN || key == 's') {
-            player.move(3);
-        } else if (keyCode == RIGHT || key == 'd') {
-            player.move(4);
-        }
-//        for (Entity[] es : entities) {
-//            for (Entity e : es) {
-//                if (e != null && e.isPlayer()) {
-//                    System.out.println(key + " entered");
-//                    if (keyCode == UP || key == 'w') {
-//                        e.move(1);
-//                    } else if (keyCode == LEFT || key == 'a') {
-//                        e.move(2);
-//                    } else if (keyCode == DOWN || key == 's') {
-//                        e.move(3);
-//                    } else if (keyCode == RIGHT || key == 'd') {
-//                        e.move(4);
-//                    }
-//                }
-//            }
+//        if (keyCode == UP || key == 'w') {
+//            player.move(1);
+//        } else if (keyCode == LEFT || key == 'a') {
+//            player.move(2);
+//        } else if (keyCode == DOWN || key == 's') {
+//            player.move(3);
+//        } else if (keyCode == RIGHT || key == 'd') {
+//            player.move(4);
 //        }
+        for (Entity[] es : entities) {
+            for (Entity e : es) {
+                if (player != null && player.isPlayer()) {
+                    System.out.println(key + " entered");
+                    if (keyCode == UP || key == 'w') {
+                        player.setWillMove(1);
+                    } else if (keyCode == LEFT || key == 'a') {
+                        player.setWillMove(2);
+                    } else if (keyCode == DOWN || key == 's') {
+                        player.setWillMove(3);
+                    } else if (keyCode == RIGHT || key == 'd') {
+                        player.setWillMove(4);
+                    }
+                }
+            }
+        }
+        for (Entity[] es : entities) {
+            for (Entity e : es) {
+                if (e != null && e.getWillMove() != 0) {
+                    e.move(e.getWillMove());
+                    e.setWillMove(0);
+                }
+            }
+        }
     }
 
     private void displayGrid() {

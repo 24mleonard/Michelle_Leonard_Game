@@ -10,6 +10,7 @@ public class Entity {
     private int stride;
 
     private boolean isPlayer; //determines whether target moves autonomously or according to user input
+    private int willMove; //1 will move up, 2 will move left, 3 will move down, 4 will move right, 0 will not move
 
     private PImage image;
 
@@ -27,6 +28,7 @@ public class Entity {
         this.image = image;
         this.isPlayer = isPlayer;
         stride = 1;
+        willMove = 0;
     }
 
     public void move(int direction) { //W 1, A 2, S 3, D 4
@@ -36,15 +38,15 @@ public class Entity {
         if (direction == 1) { //up
             targetRow -= stride;
         } else if (direction == 2) { //left
-            targetCol -= stride;
+            targetCol = targetCol - stride;
         } else if (direction == 3) { //down
-            targetRow += stride;
+            targetRow = targetRow + stride;
         } else if (direction == 4) { //right
             targetCol += stride;
         }
         //move this to target location
-        if (targetRow < 0 || targetRow > Main.NUM_ROWS - 1
-                || targetCol < 0 || targetCol > Main.NUM_COLS - 1) {
+        if (targetRow <= -1 || targetRow >= Main.entities.length
+                || targetCol <= -1 || targetCol >= Main.entities[targetRow].length) {
             //animation?
             System.out.println(this + " failed to move to " + targetRow + ", " + targetCol + " because it is out of bounds");
         } else if (Main.entities[targetRow][targetCol] != null) {
@@ -110,6 +112,10 @@ public class Entity {
         this.isPlayer = isPlayer;
     }
 
+    public void setWillMove(int willMove) {
+        this.willMove = willMove;
+    }
+
     public int getRow() {
         return row;
     }
@@ -126,4 +132,8 @@ public class Entity {
         return attack;
     }
     public boolean isPlayer() {return isPlayer;}
+
+    public int getWillMove() {
+        return willMove;
+    }
 }
