@@ -1,7 +1,7 @@
 import processing.core.PImage;
 
 public class Entity {
-    public static int count; //this is kind of dumb but i'm keeping it for convenience for now
+    private int count;
     private int row;
     private int col;
     private PImage image;
@@ -13,11 +13,13 @@ public class Entity {
     private int willMove; //1 will move up, 2 will move left, 3 will move down, 4 will move right, 0 will not move
 
     public Entity() {
-        count++;
+        Main.count++;
+        this.count = count;
     }
 
-    public Entity(int row, int col, PImage image, int maxHP, int currentHP, int attack, boolean isPlayer) {
-        count++;
+    public Entity(int count, int row, int col, PImage image, int maxHP, int currentHP, int attack, boolean isPlayer) {
+        Main.count++;
+        this.count = count;
         this.row = row;
         this.col = col;
         this.image = image;
@@ -32,6 +34,10 @@ public class Entity {
     public void display() {
         //some PImage stuff
         Main.app.image(image, col*Main.CELL_SIZE, row*Main.CELL_SIZE);
+        Main.app.textSize(30);
+        Main.app.fill(100, 255, 100);
+        Main.app.text(currentHP, col*Main.CELL_SIZE+Main.CELL_SIZE/2, row*Main.CELL_SIZE+Main.CELL_SIZE/2);
+        Main.app.fill(255);
     }
 
     public void move(int direction) { //W 1, A 2, S 3, D 4
@@ -65,12 +71,31 @@ public class Entity {
     }
     public void attack(Entity[][] entities) {
         //do a lil animation (sword swing, e.g.)
+        Main.app.fill(169);
+        Main.app.circle(this.col*Main.CELL_SIZE+Main.CELL_SIZE/2, this.row*Main.CELL_SIZE+Main.CELL_SIZE/2, (float) (Main.CELL_SIZE*2.5));
+        Main.app.fill(255);
         for (int r = -1; r <= 1; r++) {
             for (int c = -1; c <= 1; c++) {
-                Entity target = entities[r+this.getRow()][c+this.getCol()]; //this should be ok b/c of object aliasing—just pointing to the Entity in entities, not a new Entity?
+                int targetRow = r + this.getRow();
+                int targetCol = c + this.getCol();
+                if (targetRow < 0) {
+                    targetRow = 0;
+                }
+                if (targetRow >= entities.length) {
+                    targetRow = entities.length - 1;
+                }
+                if (targetCol < 0) {
+                    targetCol = 0;
+                }
+                if (targetCol >= entities[targetRow].length) {
+                    targetCol = entities[targetRow].length-1;
+                }
+                Entity target = entities[targetRow][targetCol]; //this should be ok b/c of object aliasing—just pointing to the Entity in entities, not a new Entity?
                 if (target != null && target != this) {
                     //do a lil animation (stagger, e.g.)
-                    target.setCurrentHP(target.getCurrentHP()-this.getAttack());
+                    if (Main.getFriendlyFire() || target.isPlayer() != this.isPlayer()) { //if friendly fire is on, OR this is a player and that is not, OR that is a player and this is not
+                        target.setCurrentHP(target.getCurrentHP() - this.getAttack());
+                    }
                 }
             }
         }
@@ -78,15 +103,15 @@ public class Entity {
     }
 
     public String toString() {
-        return "entity " + count;
+        return "entity" + count;
     }
 
     public void setRow(int row) {
-        System.out.println("row changed from " + this.row + " to " + row);
+        System.out.println(this + " row " + this.row + "->" + row);
         this.row = row;
     }
     public void setCol(int col) {
-        System.out.println("col changed from " + this.col + " to " + col);
+        System.out.println(this + " col " + this.col + "->" + col);
         this.col = col;
     }
     public int getRow() {
@@ -100,22 +125,22 @@ public class Entity {
     }
 
     public void setMaxHP(int maxHP) {
-        System.out.println("maxHP changed from " + this.maxHP + " to " + maxHP);
+        System.out.println(this + " maxHP changed from " + this.maxHP + " to " + maxHP);
         this.maxHP = maxHP;
     }
 
     public void setCurrentHP(int currentHP) {
-        System.out.println("currentHP changed from " + this.currentHP + " to " + currentHP);
+        System.out.println(this + " currentHP changed from " + this.currentHP + " to " + currentHP);
         this.currentHP = currentHP;
     }
 
     public void setAttack(int attack) {
-        System.out.println("attack changed from " + this.attack + " to " + attack);
+        System.out.println(this + " attack changed from " + this.attack + " to " + attack);
         this.attack = attack;
     }
 
     public void setIsPlayer(boolean isPlayer) { //I don't know why this would ever be used.
-        System.out.println(this + "is player: " + isPlayer);
+        System.out.println(this + " is player: " + isPlayer);
         this.isPlayer = isPlayer;
     }
 
