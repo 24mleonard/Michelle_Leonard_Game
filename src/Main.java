@@ -67,8 +67,8 @@ public class Main extends PApplet{
 
         entities = new Entity[NUM_ROWS][NUM_COLS];
         displayGrid();
-        entities[NUM_ROWS/2][NUM_COLS/2] = new Entity(NUM_ROWS/2, NUM_COLS/2, 3, 3, 1, playerImage, true);
-        entities[NUM_ROWS/2 + 1][NUM_COLS/2] = new Entity(NUM_ROWS/2 + 1, NUM_COLS/2, 3, 3, 1, enemyImage, true);
+        entities[NUM_ROWS/2][NUM_COLS/2] = new Entity(NUM_ROWS/2, NUM_COLS/2, playerImage, 3, 3, 1, true);
+        entities[NUM_ROWS/2 + 1][NUM_COLS/2] = new Entity(NUM_ROWS/2 + 1, NUM_COLS/2, enemyImage, 3, 3, 1, true);
     }
 
     public void draw() {
@@ -103,6 +103,8 @@ public class Main extends PApplet{
                         e.setWillMove(3);
                     } else if (keyCode == RIGHT || key == 'd') {
                         e.setWillMove(4);
+                    } else if (key == ' ') {
+                        e.attack(entities);
                     }
                 }
             }
